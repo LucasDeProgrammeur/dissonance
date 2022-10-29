@@ -1,5 +1,6 @@
 import { Ora } from "ora";
 import Client from "../structures/Client";
+import ConfigHandler from "../structures/ConfigHandler";
 import Logger from "../structures/Logger";
 
 type ClientOptions = {
@@ -25,6 +26,12 @@ type CommandOptions = {
 
 type InteractionCreateOptions = {
   client: Client;
+  config: ConfigHandler;
+};
+
+type Config = {
+  owner: Number;
+  botStatus: string;
 };
 
 export {
@@ -33,4 +40,5 @@ export {
   CommandRegistrarOptions,
   CommandOptions,
   InteractionCreateOptions,
+  Config,
 };

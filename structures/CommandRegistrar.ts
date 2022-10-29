@@ -22,14 +22,15 @@ class CommandRegistrar {
     let commandFiles = fs
       .readdirSync("./commands")
       .filter((file) => file.endsWith(".ts"));
-    commandFiles.forEach(async (command) => {
+
+    for (const command of commandFiles) {
       this.logger.addLoader("loadingCommand", `Importing: ${command}`);
       let { default: CommandClass } = await import(`../commands/${command}`);
       let commandInstance = new CommandClass(this.client, this.logger);
-      console.log(commandInstance.data)
-      this.client.commands.set(commandInstance.name, commandInstance)
+      this.commands.push(commandInstance.toJSON());
+      this.client.commands.set(commandInstance.name, commandInstance);
       this.logger.loaderSucceed("loadingCommand", `Imported: ${command}`);
-    });
+    }
 
     try {
       this.logger.addLoader(

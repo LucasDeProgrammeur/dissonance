@@ -24,14 +24,13 @@ class CommandRegistrar {
       .filter((file) => file.endsWith(".ts"));
 
     for (const command of commandFiles) {
-      this.logger.addLoader("loadingCommand", `Importing: ${command}`);
+      this.logger.addLoader("loadingCommand" + command, `Importing: ${command}`);
       let { default: CommandClass } = await import(`../commands/${command}`);
-      let commandInstance = new CommandClass(this.client, this.logger);
+      let commandInstance = new CommandClass({client: this.client, logger: this.logger});
       this.commands.push(commandInstance.toJSON());
       this.client.commands.set(commandInstance.name, commandInstance);
-      this.logger.loaderSucceed("loadingCommand", `Imported: ${command}`);
+      this.logger.loaderSucceed("loadingCommand" + command, `Imported: ${command}`);
     }
-
     try {
       this.logger.addLoader(
         "LoadCommandsIntoDiscord",
@@ -41,8 +40,7 @@ class CommandRegistrar {
         body: this.commands,
       });
       this.logger.loaderSucceed(
-        "LoadCommandsIntoDiscord",
-        "Successfully loaded commands into bot!"
+        "LoadCommandsIntoDiscord", "Successfully loaded commands into bot!"
       );
     } catch (e) {
       this.logger.loaderFailure(

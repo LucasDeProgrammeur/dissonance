@@ -10,10 +10,11 @@ class SayHello extends Command {
     this.setDescription("Dit is een test command");
     this.executeFunc = this.execute;
     this.ownerOnly = true;
+    this.category = "basic";
   }
 
   async execute(interaction: Discord.CommandInteraction) {
-    await interaction.reply("Hi");
+    await interaction.reply("Hello");
   }
 }
 

@@ -7,7 +7,7 @@ class SayHello extends Command {
   constructor(commandOptions: CommandOptions) {
     super(commandOptions);
     this.setName("sayhello");
-    this.setDescription("Dit is een test command");
+    this.setDescription("This is a test command");
     this.executeFunc = this.execute;
     this.ownerOnly = true;
     this.category = "basic";

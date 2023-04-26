@@ -7,11 +7,13 @@ class Command extends SlashCommandBuilder {
   executeFunc: any;
   client: Client;
   ownerOnly: boolean;
+  category: string;
   constructor(commandOptions: CommandOptions) {
     super();
     this.executeFunc = this.execute;
     this.client = commandOptions.client;
     this.ownerOnly = false;
+    this.category = "uncategorized";
   }
 
   async execute(interaction: Discord.CommandInteraction) {

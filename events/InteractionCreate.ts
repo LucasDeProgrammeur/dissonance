@@ -19,11 +19,10 @@ class InteractionCreate {
         );
         return;
       }
-
       try {
         if (
           command.ownerOnly === true &&
-          Number(interaction.user.id) !== this.config.configData.owner
+          Number(interaction.user.id) !== Number(this.config.configData.owner)
         ) {
           interaction.reply(
             "❌ This command has owner only enabled. You are not set as the owner."

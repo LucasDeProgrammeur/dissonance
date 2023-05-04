@@ -19,30 +19,29 @@ class Client extends Discord.Client {
     this.commands = new Collection();
     this.appId = process.env.APPLICATIONID!;
     this.logger.addLoader("loadServer", "Loading bot instance...");
+    let registrar = new CommandRegistrar({
+      client: this
+    });
     // this.user?.setPresence({
     //   activities: [{ name: `discord.js v14`, type: ActivityType.Watching }],
     //   status: "dnd",
     // });
 
-    
     this.once(Events.ClientReady, (c) => {
       this.logger.loaderSucceed(
         "loadServer",
         "Your bot, " + this.user?.username + " has loaded!"
-        );
-        new CommandRegistrar({
-          client: this,
-          logger: this.logger,
-        });
-        
-        new InteractionCreate({ client: this, config: config });
-        this.user?.setActivity(config.configData.botStatus, {
-          type: ActivityType.Watching,
-          url: "",
-        });
+      );
+      registrar?.execute()
+
+      new InteractionCreate({ client: this, config: config });
+      this.user?.setActivity(config.configData.botStatus, {
+        type: ActivityType.Watching,
+        url: "",
       });
-      
-      this.login(process.env.TOKEN);
+    });
+
+    this.login(process.env.TOKEN);
   }
 }
 

@@ -5,15 +5,15 @@ import Discord from "discord.js";
 
 class Command extends SlashCommandBuilder {
   executeFunc: any;
-  client: Client;
   ownerOnly: boolean;
   category: string;
+  client: Client;
   constructor(commandOptions: CommandOptions) {
     super();
     this.executeFunc = this.execute;
-    this.client = commandOptions.client;
     this.ownerOnly = false;
     this.category = "uncategorized";
+    this.client = commandOptions.client;
   }
 
   async execute(interaction: Discord.CommandInteraction) {

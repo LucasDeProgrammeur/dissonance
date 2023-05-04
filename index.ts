@@ -23,6 +23,7 @@ const Initialize = () => {
     token: process.env.token || "",
     logger: logger,
   });
+  return BotClient;
 };
 
 Initialize();

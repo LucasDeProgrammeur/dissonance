@@ -6,4 +6,4 @@ config.json
 commands/*
 
 # Standard commands provided by Dissonance
-!commands/essential/*
+!commands/essential/

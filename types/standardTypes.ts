@@ -16,7 +16,6 @@ type LoadingItem = {
 
 type CommandRegistrarOptions = {
   client: Client;
-  logger: Logger;
 };
 
 type CommandOptions = {

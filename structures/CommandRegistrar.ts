@@ -7,62 +7,74 @@ import Client from "./Client";
 
 class CommandRegistrar {
   client: Client;
-  logger: Logger;
   commands: Array<any>;
   constructor(commandRegistrarOptions: CommandRegistrarOptions) {
     this.client = commandRegistrarOptions.client;
-    this.logger = commandRegistrarOptions.logger;
     this.commands = [];
-    this.execute();
+    this.client = commandRegistrarOptions.client;
   }
 
-  async execute () {
-    this.logger.addLoader(
+  async execute() {
+    this.client.logger.addLoader(
       "LoadCommandsIntoDiscord",
       "Loading commands into bot..."
     );
-    this.readFilesRecursively("./commands").then(() =>
-      this.logger.loaderSucceed(
-        "LoadCommandsIntoDiscord", "Successfully loaded commands into bot!"
-      )
-    );
+    this.readFilesRecursively("./commands").then(async () => {
+      this.client.logger.loaderSucceed(
+        "LoadCommandsIntoDiscord",
+        "Successfully loaded commands into bot!"
+      );
+
+      try {
+        const rest = new REST({ version: "9" }).setToken(this.client.token);
+        await rest.put(Routes.applicationCommands(this.client.appId), {
+          body: this.client.commands,
+        });
+      } catch (e) {
+        this.client.logger.loaderFailure(
+          "LoadCommandsIntoDiscord",
+          "Failed to load commands into the bot: error: " + e
+        );
+      }
+    });
   }
 
+  async readFilesRecursively(basePath: string, commandToLoad?: string) {
+    let currentCommand = "";
 
-  async readFilesRecursively (basePath: string) {
-    const rest = new REST({ version: "9" }).setToken(this.client.token);
-      
-      
-      
-    let commandFiles = fs
-      .readdirSync(basePath)
-  
-  
+    let commandFiles = fs.readdirSync(basePath);
+
     for (const filePath of commandFiles) {
-  
-      const stat = fs.statSync(basePath + "\\" + filePath)
+      const stat = fs.statSync(basePath + "\\" + filePath);
       if (stat.isDirectory()) {
-        await this.readFilesRecursively(basePath + "\\" + filePath)
+        await this.readFilesRecursively(basePath + "\\" + filePath);
         continue;
       }
 
       let command = filePath;
-  
-      this.logger.addLoader("loadingCommand" + command, `Importing: ${command}`);
-      let { default: CommandClass } = await import(`../${basePath}\\${command}`);
-      let commandInstance = new CommandClass({client: this.client, logger: this.logger});
+      currentCommand = command;
+
+      if (commandToLoad != undefined && !command.includes(commandToLoad)) {
+        continue;
+      }
+
+      this.client.logger.addLoader(
+        "loadingCommand" + command,
+        `Importing: ${command}`
+      );
+      let { default: CommandClass } = await import(
+        `../${basePath}\\${command}`
+      );
+      let commandInstance = new CommandClass({client: this.client});
       this.commands.push(commandInstance.toJSON());
-      this.client.commands.set(commandInstance.name, commandInstance, commandInstance.category);
-      this.logger.loaderSucceed("loadingCommand" + command, `Imported: ${command}`);
-    }
-    try {
-      await rest.put(Routes.applicationCommands(this.client.appId), {
-        body: this.commands,
-      });
-    } catch (e) {
-      this.logger.loaderFailure(
-        "LoadCommandsIntoDiscord",
-        "Failed to load commands into the bot: error: " + e
+      this.client.commands.set(
+        commandInstance.name,
+        commandInstance,
+        commandInstance.category
+      );
+      this.client.logger.loaderSucceed(
+        "loadingCommand" + command,
+        `Imported: ${command}`
       );
     }
   }

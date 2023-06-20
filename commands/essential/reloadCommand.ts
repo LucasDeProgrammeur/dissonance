@@ -35,13 +35,19 @@ class ReloadCommand extends Command {
       .get("commandname")
       ?.value?.toString();
 
-     let path = getCommandPath("./commands", commandToRestart!)
+    let path = getCommandPath("./commands", commandToRestart!);
     path = path.replace("./", "../../");
-
     interaction.client.commands.delete(commandToRestart);
     let { default: CommandClass } = await import(path || "");
-    let commandInstance = new CommandClass({client: this.client, logger: this.client.logger});
-    this.client.commands.set(commandInstance.name, commandInstance, commandInstance.category)
+    let commandInstance = new CommandClass({
+      client: this.client,
+      logger: this.client.logger,
+    });
+    this.client.commands.set(
+      commandInstance.name,
+      commandInstance,
+      commandInstance.category
+    );
     await interaction.reply({ embeds: [reloadEmbed] });
   }
 }

@@ -4,6 +4,7 @@ import { Collection, REST } from "discord.js";
 import Logger from "./Logger";
 import { Routes } from "discord.js";
 import Client from "./Client";
+import ConfigHandler from "./ConfigHandler.js";
 
 class CommandRegistrar {
   client: Client;
@@ -15,27 +16,25 @@ class CommandRegistrar {
   }
 
   async execute() {
+    let config = new ConfigHandler();
     this.client.logger.addLoader(
       "LoadCommandsIntoDiscord",
       "Loading commands into bot..."
     );
     this.readFilesRecursively("./commands").then(async () => {
+
+
+      if (config.configData.sendCommandSignaturesToDiscord) {
+
+        this.sendCommandSignaturesToDiscord();
+      }
+
       this.client.logger.loaderSucceed(
         "LoadCommandsIntoDiscord",
         "Successfully loaded commands into bot!"
       );
 
-      try {
-        const rest = new REST({ version: "9" }).setToken(this.client.token);
-        await rest.put(Routes.applicationCommands(this.client.appId), {
-          body: this.client.commands,
-        });
-      } catch (e) {
-        this.client.logger.loaderFailure(
-          "LoadCommandsIntoDiscord",
-          "Failed to load commands into the bot: error: " + e
-        );
-      }
+
     });
   }
 
@@ -77,6 +76,24 @@ class CommandRegistrar {
         `Imported: ${command}`
       );
     }
+  }
+
+  async sendCommandSignaturesToDiscord () {
+    this.client.logger.addLoader("sendToDiscord", "Sending new command structure to Discord...")
+    
+    try {
+      const rest = new REST({ version: "9" }).setToken(this.client.token);
+      await rest.put(Routes.applicationCommands(this.client.appId), {
+        body: this.client.commands,
+      });
+    } catch (e) {
+      this.client.logger.loaderFailure("sendToDiscord", "Sending command structure to Discord failed!")
+      this.client.logger.loaderFailure(
+        "LoadCommandsIntoDiscord",
+        "Failed to load commands into the bot: error: " + e
+        );
+      }
+      this.client.logger.loaderSucceed("sendToDiscord", "Command structure sent to Discord")
   }
 }
 

@@ -1,4 +1,5 @@
 {
     "owner": "insert ID here",
-    "botStatus": "Your bot status!"
+    "botStatus": "Your bot status!",
+    "sendCommandSignaturesToDiscord": true
 }

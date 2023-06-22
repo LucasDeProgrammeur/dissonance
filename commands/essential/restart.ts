@@ -25,6 +25,7 @@ class Restart extends Command {
 
     await interaction.reply({ embeds: [shutdownEmbed ]});
 
+    this.client.commands.clear()
     this.client.destroy()
     Initialize();
 

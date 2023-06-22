@@ -8,9 +8,9 @@ const getCommandPath = (basePath: string, commandToLoad?: string) => {
     let commandFiles = fs
       .readdirSync(basePath)
     for (const filePath of commandFiles) {
-      const stat = fs.statSync(basePath + "\\" + filePath)
+      const stat = fs.statSync(basePath + "/" + filePath)
       if (stat.isDirectory()) {
-        let recurGet: string = getCommandPath(basePath + "\\" + filePath, commandToLoad)
+        let recurGet: string = getCommandPath(basePath + "/" + filePath, commandToLoad)
         if (recurGet.length) {
           return recurGet;
         } 
@@ -24,7 +24,7 @@ const getCommandPath = (basePath: string, commandToLoad?: string) => {
       }
 
       
-      commandPath = `${basePath}\\${command}`;
+      commandPath = `${basePath}/${command}`;
 
     }
       return commandPath;

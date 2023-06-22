@@ -44,9 +44,9 @@ class CommandRegistrar {
     let commandFiles = fs.readdirSync(basePath);
 
     for (const filePath of commandFiles) {
-      const stat = fs.statSync(basePath + "\\" + filePath);
+      const stat = fs.statSync(basePath + "/" + filePath);
       if (stat.isDirectory()) {
-        await this.readFilesRecursively(basePath + "\\" + filePath);
+        await this.readFilesRecursively(basePath + "/" + filePath);
         continue;
       }
 

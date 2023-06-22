@@ -23,6 +23,7 @@ class Help extends Command {
       sortedCommands.forEach((x: Command) => {
         if (addedCategories.find((el) => el === x.category) === undefined) {
             helpEmbed.addFields({name: "> " + x.category, value: `Commands within the ${x.category} category`})
+            addedCategories.push(x.category)
         }
 
         helpEmbed.addFields({name: x.name, value: x.description})

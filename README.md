@@ -17,3 +17,6 @@ APPLICATIONID=...
 * NodeJS
 
 In a command terminal, cd the folder where you've cloned the repository, you can now run "npm install", and "npm start" thereafter.
+
+## I want to create new commands
+You can copy a command, and change what it executes inside the execute() function. In the constructor, you can change certain properties of the command.

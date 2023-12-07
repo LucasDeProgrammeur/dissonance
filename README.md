@@ -9,7 +9,7 @@ Create a new Application at https://discord.com/developers/. Now you can move ov
 In the OAuth2 section on the left, go to URL generator. You need the "bot" permission and "application.commands" permission, to use the slash commands. You can then specify bot-specific permissions. "Administrator" will grant all the permissions below.
 
 ## Remember the token we just copied?
-Create an .env file in the root directory of this repository, and add variables like so:
+Create an .env file in the root directory of this repository, and add variables like so:\
 TOKEN=...\
 APPLICATIONID=...\
 

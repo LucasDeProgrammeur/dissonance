@@ -10,8 +10,8 @@ In the OAuth2 section on the left, go to URL generator. You need the "bot" permi
 
 ## Remember the token we just copied?
 Create an .env file in the root directory of this repository, and add variables like so:
-TOKEN=...
-APPLICATIONID=...
+TOKEN=...\
+APPLICATIONID=...\
 
 ## Prerequisites for running this bot boilerplate
 * NodeJS

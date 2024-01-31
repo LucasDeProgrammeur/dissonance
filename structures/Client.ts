@@ -35,7 +35,7 @@ class Client extends Discord.Client {
       this.user?.setActivity(config.configData.botStatus, {
         type: ActivityType.Watching,
         url: "",
-        name: "amogus",
+        name: "something",
       });
       this.logger.loaderSucceed(
         "loadServer",

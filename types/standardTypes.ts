@@ -31,6 +31,7 @@ type InteractionCreateOptions = {
 type Config = {
   owner: Number;
   botStatus: string;
+  sendCommandSignaturesToDiscord: string;
 };
 
 export {

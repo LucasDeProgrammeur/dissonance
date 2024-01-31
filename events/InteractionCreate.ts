@@ -3,6 +3,7 @@ import Discord from "discord.js";
 import Client from "../structures/Client";
 import { InteractionCreateOptions } from "../types/standardTypes";
 import ConfigHandler from "../structures/ConfigHandler.js";
+import RedditHelper from "../structures/RedditHelper.js";
 
 class InteractionCreate {
   client: Client;
@@ -11,6 +12,13 @@ class InteractionCreate {
     this.client = options.client;
     this.config = options.config;
     this.client.on(Events.InteractionCreate, async (interaction) => {
+      if (interaction.isButton()) {
+        RedditHelper.handlePageChange(interaction);
+
+        if (interaction.customId === "deletethismessage") {
+          interaction.message.delete()
+        }
+      }
       if (!interaction.isChatInputCommand()) return;
       const command = interaction.client.commands.get(interaction.commandName);
       if (!command) {

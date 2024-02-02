@@ -5,14 +5,20 @@ import Logger from "./Logger";
 import { Routes } from "discord.js";
 import Client from "./Client";
 import ConfigHandler from "./ConfigHandler.js";
+import DBHandler from "./DBHandler";
+import ChannelUpdater from "./ChannelUpdater";
 
 class CommandRegistrar {
   client: Client;
   commands: Array<any>;
+  db: DBHandler;
+  channelUpdater: ChannelUpdater;
   constructor(commandRegistrarOptions: CommandRegistrarOptions) {
     this.client = commandRegistrarOptions.client;
     this.commands = [];
     this.client = commandRegistrarOptions.client;
+    this.db = commandRegistrarOptions.db;
+    this.channelUpdater = commandRegistrarOptions.channelUpdater;
   }
 
   async execute() {
@@ -64,7 +70,7 @@ class CommandRegistrar {
       let { default: CommandClass } = await import(
         `../${basePath}\\${command}`
       );
-      let commandInstance = new CommandClass({client: this.client});
+      let commandInstance = new CommandClass({client: this.client, db: this.db, channelUpdater: this.client.channelUpdater});
       this.commands.push(commandInstance.toJSON());
       this.client.commands.set(
         commandInstance.name,
@@ -82,9 +88,13 @@ class CommandRegistrar {
     this.client.logger.addLoader("sendToDiscord", "Sending new command structure to Discord...")
     
     try {
-      const rest = new REST({ version: "9" }).setToken(this.client.token);
+      let commandsWithoutDb = [...this.client.commands];
+      commandsWithoutDb.forEach((e: any) => {delete e[1]['db']; delete e[1]["client"]; delete e[1]["channelUpdater"]})
+      commandsWithoutDb = commandsWithoutDb.map(e => e[1]);
+
+      const rest = new REST().setToken(this.client.token);
       await rest.put(Routes.applicationCommands(this.client.appId), {
-        body: this.client.commands,
+        body: commandsWithoutDb,
       });
     } catch (e) {
       this.client.logger.loaderFailure("sendToDiscord", "Sending command structure to Discord failed!")
@@ -92,6 +102,7 @@ class CommandRegistrar {
         "LoadCommandsIntoDiscord",
         "Failed to load commands into the bot: error: " + e
         );
+        return;
       }
       this.client.logger.loaderSucceed("sendToDiscord", "Command structure sent to Discord")
   }

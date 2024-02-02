@@ -2,6 +2,8 @@ import { Ora } from "ora";
 import Client from "../structures/Client";
 import ConfigHandler from "../structures/ConfigHandler";
 import Logger from "../structures/Logger";
+import DBHandler from "../structures/DBHandler";
+import ChannelUpdater from "../structures/ChannelUpdater";
 
 type ClientOptions = {
   token: string;
@@ -16,11 +18,15 @@ type LoadingItem = {
 
 type CommandRegistrarOptions = {
   client: Client;
+  db: DBHandler;
+  channelUpdater: ChannelUpdater;
 };
 
 type CommandOptions = {
   executeFunc: any;
   client: Client;
+  db: DBHandler;
+  channelUpdater: ChannelUpdater;
 };
 
 type InteractionCreateOptions = {
@@ -32,7 +38,19 @@ type Config = {
   owner: Number;
   botStatus: string;
   sendCommandSignaturesToDiscord: string;
+  enableDB: boolean;
+  enableChannelUpdates: boolean;
 };
+
+type ChannelUpdate = {
+  id: number;
+  channelId: string;
+  channelUpdateName: string;
+  title: string;
+  interval: number;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export {
   ClientOptions,
@@ -41,4 +59,5 @@ export {
   CommandOptions,
   InteractionCreateOptions,
   Config,
+  ChannelUpdate
 };

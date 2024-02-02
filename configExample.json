@@ -1,5 +1,7 @@
 {
     "owner": "insert ID here",
     "botStatus": "Your bot status!",
-    "sendCommandSignaturesToDiscord": true
+    "sendCommandSignaturesToDiscord": true,
+    "enableDB": true,
+    "enableChannelUpdates": true
 }

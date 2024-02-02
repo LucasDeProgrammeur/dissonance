@@ -1,0 +1,11 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "SQLITE",
+            "database": "${workspaceFolder:dissonance}/main.sqlite3"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}
